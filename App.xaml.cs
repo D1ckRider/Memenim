@@ -12,8 +12,8 @@ using Memenim.Core.Api;
 using Memenim.Core.Schema;
 using Memenim.Cryptography;
 using Memenim.Dialogs;
-using Memenim.Logs;
-using Memenim.Native.Window;
+using Memenim.Logging;
+using Memenim.Native;
 using Memenim.Navigation;
 using Memenim.Pages;
 using Memenim.Protocols;
@@ -335,7 +335,7 @@ namespace Memenim
 
         private static void OnError(object sender, RErrorEventArgs e)
         {
-            LogManager.Log.Error($"{e.SourceException?.GetType().Name ?? "Unknown"} - Message={e.Message ?? (e.SourceException?.Message ?? "Unknown")},HResult={e.SourceException?.HResult ?? 0},StackTrace=\n{e.Stacktrace ?? (e.SourceException?.StackTrace ?? "Unknown")}");
+            LogManager.Log.Error($"{e.SourceException?.GetType().Name ?? "Unknown"} - Message={e.Message ?? (e.SourceException?.Message ?? "Unknown")},HResult={e.SourceException?.HResult ?? 0},StackTrace=\n{e.SourceException?.StackTrace ?? "Unknown"}");
         }
 
 

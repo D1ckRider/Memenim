@@ -1,7 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using MahApps.Metro.Controls.Dialogs;
-using Memenim.Logs;
+using Memenim.Logging;
 using Memenim.Utils;
 using RIS;
 
@@ -60,8 +60,7 @@ namespace Memenim.Dialogs
                            ?? "Error";
 
             Events.OnError(new RErrorEventArgs(
-                $"{title} - {message}",
-                "at Memenim.Dialogs.DialogManager.ShowErrorDialog(string message, bool isCancellable, MetroDialogSettings settings)"));
+                $"{title} - {message}"));
 
             return ShowMessageDialog(title, message,
                 isCancellable, settings);

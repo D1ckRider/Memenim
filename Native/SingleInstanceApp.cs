@@ -4,12 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Memenim.Logs;
+using Memenim.Logging;
+using Memenim.Native.Window;
 using Memenim.Protocols;
 using ProtoBuf;
 using TinyIpc.Messaging;
 
-namespace Memenim.Native.Window
+namespace Memenim.Native
 {
     internal sealed class SingleInstanceApp
     {

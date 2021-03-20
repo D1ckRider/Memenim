@@ -27,13 +27,6 @@ namespace Memenim.Pages
                 return DataContext as PostOverlayViewModel;
             }
         }
-        public bool CommentsIsOpen
-        {
-            get
-            {
-                return ViewModel.CurrentPostData?.IsCommentsOpen ?? false;
-            }
-        }
 
         public PostOverlayPage()
         {
@@ -111,6 +104,8 @@ namespace Memenim.Pages
 
             ViewModel.CurrentPostData = result.Data;
 
+            wdgPost.UpdateContextMenus();
+
             if (ViewModel.SourcePostWidget?.CurrentPostData.Id == ViewModel.CurrentPostData.Id)
             {
                 ViewModel.SourcePostWidget?.SetValue(
@@ -145,17 +140,6 @@ namespace Memenim.Pages
         protected override async void OnEnter(object sender, RoutedEventArgs e)
         {
             base.OnEnter(sender, e);
-
-            if (!CommentsIsOpen)
-            {
-                wdgWriteComment.Visibility = Visibility.Collapsed;
-                wdgCommentsList.Visibility = Visibility.Collapsed;
-            }
-            else
-            {
-                wdgCommentsList.Visibility = Visibility.Visible;
-                wdgWriteComment.Visibility = Visibility.Visible;
-            }
 
             UpdateLayout();
             GC.WaitForPendingFinalizers();
@@ -371,7 +355,7 @@ namespace Memenim.Pages
             double verticalOffset = svPost.VerticalOffset;
             double scrollableHeight = svPost.ScrollableHeight;
             string replyText = //$">>> {commentsList.PostId}@{comment.CurrentCommentData.Id}@{comment.CurrentCommentData.User.Id} {comment.CurrentCommentData.User.Nickname}:\n\n"
-                               $">>> {comment.CurrentCommentData.User.Nickname}:\n\n"
+                               $">>> {(string.IsNullOrEmpty(comment.CurrentCommentData.User.Nickname) ? "Unknown" : comment.CurrentCommentData.User.Nickname)}:\n\n"
                                + $"{comment.CurrentCommentData.Text}\n\n"
                                + ">>>\n\n";
 
@@ -384,8 +368,11 @@ namespace Memenim.Pages
             if (verticalOffset >= scrollableHeight - 20)
                 svPost.ScrollToEnd();
 
-            if (comment.CurrentCommentData.User.Id == SettingsManager.PersistentSettings.CurrentUser.Id)
+            if (comment.CurrentCommentData.User.Id.HasValue
+                && comment.CurrentCommentData.User.Id == SettingsManager.PersistentSettings.CurrentUser.Id)
+            {
                 return;
+            }
 
             for (int i = 0; i < 2; ++i)
             {

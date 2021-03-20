@@ -25,6 +25,9 @@
                         <DataTrigger Binding="{Binding Path=StatusValue}" Value="Rejected">
                             <Setter Property="Border.Background" Value="Red"/>
                         </DataTrigger>
+                        <DataTrigger Binding="{Binding Path=StatusValue}" Value="Unlisted">
+                            <Setter Property="Border.Background" Value="DarkRed"/>
+                        </DataTrigger>
                     </Style.Triggers>
                 </Style>
             </Border.Style>
@@ -45,6 +48,9 @@
                             </DataTrigger>
                             <DataTrigger Binding="{Binding Path=StatusValue}" Value="Rejected">
                                 <Setter Property="TextBlock.Text" Value="{DynamicResource Enum-PostStatusType-Rejected}"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Path=StatusValue}" Value="Unlisted">
+                                <Setter Property="TextBlock.Text" Value="{DynamicResource Enum-PostStatusType-Unlisted}"/>
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
