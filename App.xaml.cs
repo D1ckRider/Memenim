@@ -21,6 +21,7 @@ using Memenim.Settings;
 using Memenim.Storage;
 using Memenim.Utils;
 using RIS;
+using RIS.Cryptography;
 using RIS.Wrappers;
 using Environment = RIS.Environment;
 
@@ -167,7 +168,7 @@ namespace Memenim
 
             using (var file = new StreamWriter(
                 Path.Combine(hashFileDirectoryName, $"{hashName}.{hashFileNameWithoutExtension}.{hashType}"),
-                false, RIS.Cryptography.Utils.SecureUTF8))
+                false, SecureUtils.SecureUTF8))
             {
                 file.WriteLine(hash);
             }
@@ -211,9 +212,15 @@ namespace Memenim
 
             MainWindow = Memenim.MainWindow.Instance;
 
+            await Task.Delay(TimeSpan.FromMilliseconds(200))
+                .ConfigureAwait(true);
+
             Memenim.MainWindow.Instance.Show();
 
             base.OnStartup(e);
+
+            await Task.Delay(TimeSpan.FromMilliseconds(500))
+                .ConfigureAwait(true);
 
             if (Memenim.MainWindow.Instance.Locales.Count == 0)
             {
@@ -303,7 +310,7 @@ namespace Memenim
                 }
             }).ConfigureAwait(true);
 
-            await Task.Delay(TimeSpan.FromSeconds(1))
+            await Task.Delay(TimeSpan.FromSeconds(1.5))
                 .ConfigureAwait(true);
 
             await Memenim.MainWindow.Instance.ShowLoadingGrid(false)

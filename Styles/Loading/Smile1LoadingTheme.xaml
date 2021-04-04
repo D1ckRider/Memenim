@@ -1,0 +1,11 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:Memenim.Styles"
+                    xmlns:system="clr-namespace:System;assembly=System.Runtime">
+
+    <system:String x:Key="MahAppsThemeName">LightTheme</system:String>
+
+    <SolidColorBrush x:Key="Window.Main.TitleBackground" Color="#FFFBCB3C"/>
+    <SolidColorBrush x:Key="Window.Main.NonActiveTitleBackground" Color="#FFFBCB3C"/>
+    <SolidColorBrush x:Key="Window.Main.Background" Color="#FFFBCB3C"/>
+</ResourceDictionary>
