@@ -1,11 +1,8 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:local="clr-namespace:Memenim.Localization"
                     xmlns:system="clr-namespace:System;assembly=System.Runtime">
 
     <system:String x:Key="ResourceDictionaryName">localization-xaml</system:String>
-    <system:String x:Key="ResourceCultureName">ja-JP</system:String>
-    <system:String x:Key="ResourceLocaleName">日本語</system:String>
 
     <system:String x:Key="Login">ユーザー名前</system:String>
     <system:String x:Key="Password">パスワード</system:String>

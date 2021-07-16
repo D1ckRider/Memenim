@@ -10,6 +10,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Interop;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using MahApps.Metro.Controls;
 using Memenim.Core.Api;
 using Memenim.Dialogs;
@@ -22,6 +23,7 @@ using Memenim.Navigation;
 using Memenim.Pages;
 using Memenim.Settings;
 using Memenim.Styles;
+using Memenim.Styles.Loading.Entities;
 using Memenim.Utils;
 using RIS;
 using Math = RIS.Mathematics.Math;
@@ -94,8 +96,7 @@ namespace Memenim
         private bool _loadingGridTitleLockStatus;
         private bool _connectionFailedGridTitleLockStatus;
 
-        private ResourceDictionary _loadingStyle;
-        private ResourceDictionary _loadingMahAppsStyle;
+        private LoadingStyle _loadingStyle;
 
         private bool _specialEventEnabled;
         public bool SpecialEventEnabled
@@ -156,19 +157,7 @@ namespace Memenim
             ConnectionFailedGridStatus = false;
             _connectionFailedGridTask = Task.CompletedTask;
 
-            _loadingStyle = StylesManager.GetStyle(
-                "Loading", "Smile1LoadingTheme");
-
-            string mahAppsStyleName;
-
-            if (_loadingStyle.Contains("MahAppsThemeName"))
-                mahAppsStyleName = (string)_loadingStyle["MahAppsThemeName"];
-            else
-                mahAppsStyleName = "DarkTheme";
-
-            _loadingMahAppsStyle = StylesManager.GetStyle(
-                "MahApps", mahAppsStyleName);
-
+            ApplyLoadingStyle();
             LoadSpecialEvent();
 
             LocalizationManager.ReloadLocales();
@@ -268,6 +257,57 @@ namespace Memenim
             slcCommentReplyMode.SelectionChanged += slcCommentReplyMode_SelectionChanged;
         }
 
+        private void ApplyLoadingStyle()
+        {
+            _loadingStyle = StylesManager.GetRandomLoadingStyle();
+
+            if (_loadingStyle.ForegroundImageUri != null)
+            {
+
+                loadingForegroundImage.Source = new BitmapImage(
+                    _loadingStyle.ForegroundImageUri);
+                connectionFailedForegroundImage.Source = new BitmapImage(
+                    _loadingStyle.ForegroundImageUri);
+
+                loadingForegroundImage.Visibility = Visibility.Visible;
+                connectionFailedForegroundImage.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                loadingForegroundImage.Source = null;
+                connectionFailedForegroundImage.Source = null;
+
+                loadingForegroundImage.Visibility = Visibility.Hidden;
+                connectionFailedForegroundImage.Visibility = Visibility.Hidden;
+            }
+
+            if (_loadingStyle.BackgroundImageUri != null)
+            {
+
+                loadingBackgroundImage.Source = new BitmapImage(
+                    _loadingStyle.BackgroundImageUri);
+                connectionFailedBackgroundImage.Source = new BitmapImage(
+                    _loadingStyle.BackgroundImageUri);
+
+                loadingBackgroundImage.Visibility = Visibility.Visible;
+                connectionFailedBackgroundImage.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                loadingBackgroundImage.Source = null;
+                connectionFailedBackgroundImage.Source = null;
+
+                loadingBackgroundImage.Visibility = Visibility.Hidden;
+                connectionFailedBackgroundImage.Visibility = Visibility.Hidden;
+            }
+
+            loadingIndicator.HorizontalAlignment = _loadingStyle.LoadingIndicatorHorizontalAlignment;
+            loadingIndicator.VerticalAlignment= _loadingStyle.LoadingIndicatorVerticalAlignment;
+
+            connectionFailedIndicator.HorizontalAlignment = _loadingStyle.LoadingIndicatorHorizontalAlignment;
+            connectionFailedIndicator.VerticalAlignment = _loadingStyle.LoadingIndicatorVerticalAlignment;
+        }
+
         private void LoadSpecialEvent()
         {
             var appStartupTime = DateTime.ParseExact(
@@ -354,15 +394,14 @@ namespace Memenim
                 loadingIndicator.IsActive = true;
                 loadingGrid.Opacity = 1.0;
                 loadingGrid.IsHitTestVisible = true;
-                loadingImage.Visibility = Visibility.Visible;
                 loadingGrid.Visibility = Visibility.Visible;
 
                 if (changeStyleNeeded)
                 {
                     Resources.MergedDictionaries
-                        .Add(_loadingStyle);
+                        .Add(_loadingStyle.Dictionary);
                     Resources.MergedDictionaries
-                        .Add(_loadingMahAppsStyle);
+                        .Add(_loadingStyle.MahAppsDictionary);
                 }
 
                 _loadingGridTask = Task.CompletedTask;
@@ -416,7 +455,7 @@ namespace Memenim
                             loadingGrid.IsHitTestVisible = false;
 
                             Resources.MergedDictionaries
-                                .Remove(_loadingMahAppsStyle);
+                                .Remove(_loadingStyle.MahAppsDictionary);
                         });
 
                         isHitTestVisible = false;
@@ -436,7 +475,7 @@ namespace Memenim
                     if (changeStyleNeeded)
                     {
                         Resources.MergedDictionaries
-                            .Remove(_loadingStyle);
+                            .Remove(_loadingStyle.Dictionary);
 
                         SetResourceReference(WindowTitleBrushProperty, "Window.Main.TitleBackground");
                         SetResourceReference(NonActiveWindowTitleBrushProperty, "Window.Main.NonActiveTitleBackground");
@@ -487,15 +526,14 @@ namespace Memenim
                 connectionFailedIndicator.IsActive = true;
                 connectionFailedGrid.Opacity = 1.0;
                 connectionFailedGrid.IsHitTestVisible = true;
-                connectionFailedImage.Visibility = Visibility.Visible;
                 connectionFailedGrid.Visibility = Visibility.Visible;
 
                 if (changeStyleNeeded)
                 {
                    Resources.MergedDictionaries
-                        .Add(_loadingStyle);
+                        .Add(_loadingStyle.Dictionary);
                    Resources.MergedDictionaries
-                       .Add(_loadingMahAppsStyle);
+                       .Add(_loadingStyle.MahAppsDictionary);
                 }
 
                 _connectionFailedGridTask = Task.CompletedTask;
@@ -549,7 +587,7 @@ namespace Memenim
                             connectionFailedGrid.IsHitTestVisible = false;
 
                             Resources.MergedDictionaries
-                                .Remove(_loadingMahAppsStyle);
+                                .Remove(_loadingStyle.MahAppsDictionary);
                         });
 
                         isHitTestVisible = false;
@@ -569,7 +607,7 @@ namespace Memenim
                     if (changeStyleNeeded)
                     {
                         Resources.MergedDictionaries
-                            .Remove(_loadingStyle);
+                            .Remove(_loadingStyle.Dictionary);
 
                         SetResourceReference(WindowTitleBrushProperty, "Window.Main.TitleBackground");
                         SetResourceReference(NonActiveWindowTitleBrushProperty, "Window.Main.NonActiveTitleBackground");
@@ -592,7 +630,7 @@ namespace Memenim
         {
             base.OnSourceInitialized(e);
 
-            _hwndSource = (HwndSource) PresentationSource.FromVisual(this);
+            _hwndSource = (HwndSource)PresentationSource.FromVisual(this);
             _hwndSource?.AddHook(WindowUtils.HwndSourceHook);
         }
 
@@ -790,48 +828,16 @@ namespace Memenim
 
         private void Discord_Click(object sender, RoutedEventArgs e)
         {
-            const string link = "https://discord.gg/yfSrUwCmZ8";
+            const string link = "https://discord.gg/yhATVBWxZG";
 
-            var startInfo = new ProcessStartInfo
-            {
-                FileName = link,
-                UseShellExecute = true
-            };
-
-            try
-            {
-                Process.Start(startInfo);
-            }
-            catch (Exception)
-            {
-                var exception = new Exception(
-                    $"An error occurred when opening the link '{link}'");
-                Events.OnError(new RErrorEventArgs(exception,
-                    exception.Message));
-            }
+            LinkUtils.OpenLink(link);
         }
 
         private void Telegram_Click(object sender, RoutedEventArgs e)
         {
             const string link = "https://t.me/joinchat/Vf9B3XM5SM-zUbkf";
 
-            var startInfo = new ProcessStartInfo
-            {
-                FileName = link,
-                UseShellExecute = true
-            };
-
-            try
-            {
-                Process.Start(startInfo);
-            }
-            catch (Exception)
-            {
-                var exception = new Exception(
-                    $"An error occurred when opening the link '{link}'");
-                Events.OnError(new RErrorEventArgs(exception,
-                    exception.Message));
-            }
+            LinkUtils.OpenLink(link);
         }
 
         private void MainWindow_Closed(object sender, EventArgs e)

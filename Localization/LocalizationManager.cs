@@ -37,12 +37,22 @@ namespace Memenim.Localization
 
         static LocalizationManager()
         {
-            var directory = Environment.ExecProcessDirectoryName;
+            var baseAppDirectory = Environment.ExecAppDirectoryName;
+            var baseProcessDirectory = Environment.ExecProcessDirectoryName;
 
-            if (string.IsNullOrEmpty(directory) || directory == "Unknown")
+            if (string.IsNullOrEmpty(baseAppDirectory) || baseAppDirectory == "Unknown")
+                return;
+            if (string.IsNullOrEmpty(baseProcessDirectory) || baseProcessDirectory == "Unknown")
                 return;
 
-            directory = Path.Combine(directory, "localizations");
+            var directory = Path.Combine(baseAppDirectory,
+                "Localization", "localizations");
+
+            if (!Directory.Exists(directory))
+                Directory.CreateDirectory(directory);
+
+            directory = Path.Combine(baseProcessDirectory,
+                "localizations");
 
             if (!Directory.Exists(directory))
                 Directory.CreateDirectory(directory);
@@ -178,7 +188,8 @@ namespace Memenim.Localization
             var localesPaths = new Dictionary<string, List<string>>();
 
             foreach (var localePaths in GetLocalesPaths(
-                Environment.ExecAppDirectoryName, "Localization"))
+                Environment.ExecAppDirectoryName,
+                Path.Combine("Localization", "localizations")))
             {
                 if (!localesPaths.TryGetValue(localePaths.Key, out _))
                 {
@@ -192,7 +203,8 @@ namespace Memenim.Localization
             }
 
             foreach (var localePaths in GetLocalesPaths(
-                Environment.ExecProcessDirectoryName, "localizations"))
+                Environment.ExecProcessDirectoryName,
+                "localizations"))
             {
                 if (!localesPaths.TryGetValue(localePaths.Key, out _))
                 {

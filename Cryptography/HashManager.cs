@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using Memenim.Settings;
 using RIS.Cryptography.Hash;
 using RIS.Cryptography.Hash.Methods;
 using Environment = RIS.Environment;
@@ -22,15 +23,18 @@ namespace Memenim.Cryptography
         {
             return Service.GetDirectoryHash(Environment.ExecAppDirectoryName,false, new[]
             {
+                "scripts",
+                Path.Combine("Script", "scripts"),
                 "localizations",
+                "downloads",
                 "storage",
+                "temp",
                 "logs",
                 "hash",
-                "downloads",
-                "AppSettings.config",
-                "PersistentSettings.store",
-                "MEMENIM.exe",
-                "MEMENIM.pdb",
+                AppSettings.SettingsFileName,
+                PersistentSettings.SettingsFileName,
+                Path.ChangeExtension(Path.GetFileName(Environment.ExecProcessFilePath), "exe"),
+                Path.ChangeExtension(Path.GetFileName(Environment.ExecProcessFilePath), "pdb"),
                 //dev
                 "publish",
                 "win-x64",

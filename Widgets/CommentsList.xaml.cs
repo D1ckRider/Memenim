@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
-using System.Windows.Controls;
 using MahApps.Metro.Controls;
 using Memenim.Core.Api;
 using Memenim.Core.Schema;
@@ -15,7 +14,7 @@ using WpfAnimatedGif;
 
 namespace Memenim.Widgets
 {
-    public partial class CommentsList : UserControl
+    public partial class CommentsList : WidgetContent
     {
         public static readonly RoutedEvent OnCommentsUpdated =
             EventManager.RegisterRoutedEvent(nameof(CommentsUpdate), RoutingStrategy.Direct, typeof(EventHandler<RoutedEventArgs>), typeof(CommentsList));
@@ -503,7 +502,7 @@ namespace Memenim.Widgets
 
             UpdateLayout();
 
-            if (page?.svPost?.VerticalOffset > page?.wdgPost?.ActualHeight - ((page?.wdgPost?.ActualHeight % page?.svPost?.ActualHeight) / 100 * 50))
+            if (page?.svPost?.VerticalOffset > page?.wdgPost?.ActualHeight - (page?.svPost?.ActualHeight / 100 * 50))
             {
                 page?.svPost?.ScrollToVerticalOffset(
                     page.svPost.VerticalOffset + (page.svPost.ScrollableHeight - scrollableHeight));
